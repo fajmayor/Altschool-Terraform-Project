@@ -1,0 +1,46 @@
+    - name: Install Apache
+      package:
+        name:
+          - "httpd"
+          - "php"
+        state: present
+
+    - name: Start Apache
+      service: name=httpd state=started enabled=yes
+
+    - name: Set timezone
+      shell: |
+        timedatectl set-timezone Africa/Lagos
+
+    # - name: Create index.html
+    #   copy:
+    #     content: |
+    #       <html>
+    #         <body>
+    #           <h1>Hello from Terraform-Ansible deployment!</h1>
+    #         </body>
+    #       </html>
+    #     dest: /var/www/html/index.html
+
+        
+    - name: Create index.php
+      copy:
+        content: |
+          <body bgcolor='white'>
+            <pre>
+            <p style="color:green;font-size:20px;text-align:center">
+              <?php
+              print("<b><font color=\"blue\">Altschool Terraform Project</font>\n\n");
+                echo 'EC2 Hostname: '.exec('hostname');
+                print("<b><font color=\"blue\"></font>\n\n");
+                echo 'Public IP Address:'.exec("curl ifconfig.me");
+                print("<b><font color=\"blue\"></font>\n\n");
+                echo 'Private IP Address: '.$_SERVER['SERVER_ADDR'];  
+              ?>
+            </p>
+              <?php
+                print (`/usr/sbin/ifconfig`);
+              ?>
+              
+            </pre>
+        dest: /var/www/html/index.php
